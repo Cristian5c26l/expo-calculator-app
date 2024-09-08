@@ -62,13 +62,13 @@ export const useCalculator = () => {
 
     const setLastNumber = () => {
 
-        const subResult = calculateSubResult();
+        calculateResultWithEqualButton();
 
-        // if (number.endsWith('.')) {
-        //     setPrevNumber(number.slice(0, -1))
-        // }
+        if (number.endsWith('.')) {
+            setPrevNumber(number.slice(0, -1))
+        }
 
-        setPrevNumber(`${subResult}`);
+        setPrevNumber(number);
         setNumber('0');
 
     }
