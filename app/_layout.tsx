@@ -1,37 +1,41 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { View, Text, Platform } from 'react-native';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useFonts } from 'expo-font'
+import { Slot } from 'expo-router'
+import { StatusBar } from 'expo-status-bar';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { globalStyles } from '@/styles/global-styles';
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
+import * as NavigationBar from 'expo-navigation-bar';
+
+const isAndroid = Platform.OS === 'android';
+
+if (isAndroid) {
+  NavigationBar.setBackgroundColorAsync('black');
+}
+
+
+const RootLayout = () => {
+
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
+  if (!loaded) {// Si la fuente SpaceMono no está cargada y no está lista para usar
+    return (<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 60 }}>Fonts not loaded!!!!!</Text>
+    </View>)
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
-  );
+    <View
+      style={globalStyles.background}>
+
+      <Slot />
+
+      <StatusBar style='light' />
+    </View>
+  )
 }
+
+export default RootLayout
